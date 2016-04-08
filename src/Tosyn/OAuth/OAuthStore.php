@@ -3,26 +3,26 @@
 /**
  * Storage container for the oauth credentials, both server and consumer side.
  * This is the factory to select the store you want to use
- * 
+ *
  * @version $Id: OAuthStore.php 67 2010-01-12 18:42:04Z brunobg@corollarium.com $
  * @author Marc Worrell <marcw@pobox.com>
  * @date  Nov 16, 2007 4:03:30 PM
- * 
- * 
+ *
+ *
  * The MIT License
- * 
+ *
  * Copyright (c) 2007-2008 Mediamatic Lab
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,7 +32,9 @@
  * THE SOFTWARE.
  */
 
-require_once dirname(__FILE__) . '/OAuthException2.php';
+namespace Tosyn\OAuth;
+
+// require_once dirname(__FILE__) . '/OAuthException2.php';
 
 class OAuthStore
 {
@@ -61,7 +63,7 @@ class OAuthStore
 			if (is_file($file))
 			{
 				require_once $file;
-				
+
 				if (class_exists($class))
 				{
 					OAuthStore::$instance = new $class($options);
@@ -76,7 +78,7 @@ class OAuthStore
 				throw new OAuthException2('No OAuthStore for '.$store.' (file '.$file.')');
 			}
 	    }
-	    return OAuthStore::$instance;	
+	    return OAuthStore::$instance;
 	}
 }
 
