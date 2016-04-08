@@ -1,6 +1,9 @@
 {
     "name": "tosyn/oauth",
     "description": "This library includes all the classes needed for OAuth 1/1.0a",
+    "type": "library",
+    "keywords": ["oauth"],
+    "homepage": "https://github.com/Tosyn/OAuth",
     "license": "MIT",
     "authors": [
         {
