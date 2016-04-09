@@ -282,17 +282,25 @@ class OAuthRequest
 	{
 		$m     = strtoupper($method);
 		$m     = preg_replace('/[^A-Z0-9]/', '_', $m);
-		$class = 'OAuthSignatureMethod_'.$m;
 
-		if (file_exists(dirname(__FILE__).'/signature_method/'.$class.'.php'))
-		{
-			require_once dirname(__FILE__).'/signature_method/'.$class.'.php';
-			$sig = new $class();
+		switch ($m) {
+			case 'HMAC_SHA1':
+				$sig = new Signature\HmacSha1();
+				break;
+			case 'MD5':
+				$sig = new Signature\Md5();
+				break;
+			case 'RSA-SHA1':
+				$sig = new Signature\RsaSha1();
+				break;
+			case 'PLAINTEXT':
+				$sig = new Signature\PlainText();
+				break;
+			default:
+				throw new OAuthException2('Unsupported signature method "'.$method.'".');
+				break;
 		}
-		else
-		{
-			throw new OAuthException2('Unsupported signature method "'.$m.'".');
-		}
+
 		return $sig;
 	}
 

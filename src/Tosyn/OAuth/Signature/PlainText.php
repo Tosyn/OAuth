@@ -1,7 +1,7 @@
 <?php
 
 /**
- * OAuth signature implementation using MD5
+ * OAuth signature implementation using PLAINTEXT
  *
  * @version $Id$
  * @author Marc Worrell <marcw@pobox.com>
@@ -30,21 +30,20 @@
  * THE SOFTWARE.
  */
 
-namespace Tosyn\OAuth;
+namespace Tosyn\OAuth\Signature;
 // require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
 
-class MD5 extends Method
+
+class PlainText extends SignatureMethod
 {
 	public function name ()
 	{
-		return 'MD5';
+		return 'PLAINTEXT';
 	}
 
 
 	/**
-	 * Calculate the signature using MD5
-	 * Binary md5 digest, as distinct from PHP's built-in hexdigest.
-	 * This function is copyright Andy Smith, 2007.
+	 * Calculate the signature using PLAINTEXT
 	 *
 	 * @param OAuthRequest request
 	 * @param string base_string
@@ -54,15 +53,7 @@ class MD5 extends Method
 	 */
 	function signature ( $request, $base_string, $consumer_secret, $token_secret )
 	{
-		$s  .= '&'.$request->urlencode($consumer_secret).'&'.$request->urlencode($token_secret);
-		$md5 = md5($base_string);
-		$bin = '';
-
-		for ($i = 0; $i < strlen($md5); $i += 2)
-		{
-		    $bin .= chr(hexdec($md5{$i+1}) + hexdec($md5{$i}) * 16);
-		}
-		return $request->urlencode(base64_encode($bin));
+		return $request->urlencode($request->urlencode($consumer_secret).'&'.$request->urlencode($token_secret));
 	}
 
 
@@ -81,12 +72,7 @@ class MD5 extends Method
 		$a = $request->urldecode($signature);
 		$b = $request->urldecode($this->signature($request, $base_string, $consumer_secret, $token_secret));
 
-		// We have to compare the decoded values
-		$valA  = base64_decode($a);
-		$valB  = base64_decode($b);
-
-		// Crude binary comparison
-		return rawurlencode($valA) == rawurlencode($valB);
+		return $request->urldecode($a) == $request->urldecode($b);
 	}
 }
 

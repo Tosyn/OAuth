@@ -1,11 +1,11 @@
 <?php
 
 /**
- * OAuth signature implementation using HMAC-SHA1
+ * OAuth signature implementation using MD5
  *
  * @version $Id$
  * @author Marc Worrell <marcw@pobox.com>
- * @date  Sep 8, 2008 12:21:19 PM
+ * @date  Sep 8, 2008 12:09:43 PM
  *
  * The MIT License
  *
@@ -30,21 +30,20 @@
  * THE SOFTWARE.
  */
 
-namespace Tosyn\OAuth;
-use Tosyn\OAuth\Signature\Method;
-
+namespace Tosyn\OAuth\Signature;
 // require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
 
-class HMACSHA1 extends Method
+class Md5 extends SignatureMethod
 {
 	public function name ()
 	{
-		return 'HMAC-SHA1';
+		return 'MD5';
 	}
 
 
 	/**
-	 * Calculate the signature using HMAC-SHA1
+	 * Calculate the signature using MD5
+	 * Binary md5 digest, as distinct from PHP's built-in hexdigest.
 	 * This function is copyright Andy Smith, 2007.
 	 *
 	 * @param OAuthRequest request
@@ -55,34 +54,15 @@ class HMACSHA1 extends Method
 	 */
 	function signature ( $request, $base_string, $consumer_secret, $token_secret )
 	{
-		$key = $request->urlencode($consumer_secret).'&'.$request->urlencode($token_secret);
-		if (function_exists('hash_hmac'))
+		$s  .= '&'.$request->urlencode($consumer_secret).'&'.$request->urlencode($token_secret);
+		$md5 = md5($base_string);
+		$bin = '';
+
+		for ($i = 0; $i < strlen($md5); $i += 2)
 		{
-			$signature = base64_encode(hash_hmac("sha1", $base_string, $key, true));
+		    $bin .= chr(hexdec($md5{$i+1}) + hexdec($md5{$i}) * 16);
 		}
-		else
-		{
-		    $blocksize	= 64;
-		    $hashfunc	= 'sha1';
-		    if (strlen($key) > $blocksize)
-		    {
-		        $key = pack('H*', $hashfunc($key));
-		    }
-		    $key	= str_pad($key,$blocksize,chr(0x00));
-		    $ipad	= str_repeat(chr(0x36),$blocksize);
-		    $opad	= str_repeat(chr(0x5c),$blocksize);
-		    $hmac 	= pack(
-		                'H*',$hashfunc(
-		                    ($key^$opad).pack(
-		                        'H*',$hashfunc(
-		                            ($key^$ipad).$base_string
-		                        )
-		                    )
-		                )
-		            );
-			$signature = base64_encode($hmac);
-		}
-		return $request->urlencode($signature);
+		return $request->urlencode(base64_encode($bin));
 	}
 
 
@@ -109,7 +89,6 @@ class HMACSHA1 extends Method
 		return rawurlencode($valA) == rawurlencode($valB);
 	}
 }
-
 
 /* vi:set ts=4 sts=4 sw=4 binary noeol: */
 

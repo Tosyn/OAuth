@@ -30,10 +30,10 @@
  * THE SOFTWARE.
  */
 
-namespace Tosyn\OAuth;
+namespace Tosyn\OAuth\Signature;
 // require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
 
-class Method_RSA_SHA1 extends Method
+class RsaSha1 extends SignatureMethod
 {
 	public function name()
 	{

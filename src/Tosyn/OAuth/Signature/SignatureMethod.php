@@ -30,9 +30,9 @@
  * THE SOFTWARE.
  */
 
-namespace Tosyn\OAuth;
+namespace Tosyn\OAuth\Signature;
 
-abstract class Method
+abstract class SignatureMethod
 {
 	/**
 	 * Return the name of this signature
