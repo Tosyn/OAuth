@@ -33,7 +33,7 @@
 namespace Tosyn\OAuth;
 // require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
 
-class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
+class Method_RSA_SHA1 extends Method
 {
 	public function name()
 	{

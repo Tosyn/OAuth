@@ -31,11 +31,11 @@
  */
 
 namespace Tosyn\OAuth;
+use Tosyn\OAuth\Signature\Method;
 
 // require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
 
-
-class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
+class HMACSHA1 extends Method
 {
 	public function name ()
 	{
