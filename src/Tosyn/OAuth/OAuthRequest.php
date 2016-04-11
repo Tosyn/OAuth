@@ -33,6 +33,10 @@
 
 namespace Tosyn\OAuth;
 use Tosyn\OAuth\OAuthException2 as OAuthException2;
+use Tosyn\OAuth\Signature\Md5 as Md5;
+use Tosyn\OAuth\Signature\RsaSha1 as RsaSha1;
+use Tosyn\OAuth\Signature\HmacSha1 as HmacSha1;
+use Tosyn\OAuth\Signature\PlainText as PlainText;
 
 /**
  * Object to parse an incoming OAuth request or prepare an outgoing OAuth request
@@ -285,16 +289,16 @@ class OAuthRequest
 
 		switch ($m) {
 			case 'HMAC_SHA1':
-				$sig = new Signature\HmacSha1();
+				$sig = new HmacSha1();
 				break;
 			case 'MD5':
-				$sig = new Signature\Md5();
+				$sig = new Md5();
 				break;
 			case 'RSA-SHA1':
-				$sig = new Signature\RsaSha1();
+				$sig = new RsaSha1();
 				break;
 			case 'PLAINTEXT':
-				$sig = new Signature\PlainText();
+				$sig = new PlainText();
 				break;
 			default:
 				throw new OAuthException2('Unsupported signature method "'.$method.'".');
